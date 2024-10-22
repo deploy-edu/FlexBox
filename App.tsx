@@ -1,25 +1,29 @@
 import { useRef, useState } from "react";
-import { PanResponder, StyleSheet, View } from "react-native";
+import {
+  PanResponder,
+  StyleSheet,
+  useWindowDimensions,
+  View,
+} from "react-native";
 
 const DEFAULT_HEIGHT = 100;
 
 export default function App() {
   const [topHeight, setTopHeight] = useState(DEFAULT_HEIGHT);
   const [bottomHeight, setBottomHeight] = useState(DEFAULT_HEIGHT);
+  const { height } = useWindowDimensions();
 
   /// 손가락에 따라서 움직이는 것을 감지하는 것
   const panResponderRef = useRef(
     PanResponder.create({
       onMoveShouldSetPanResponder: () => true,
-      onPanResponderGrant: (e, gestureState) => {
-        console.log("onPanResponderGrant", gestureState);
-      },
+      onPanResponderGrant: (e, gestureState) => {},
       onPanResponderMove: (e, gestureState) => {
-        console.log("onPanResponderMove", gestureState);
+        const { moveY, y0 } = gestureState;
+        const distance = y0 - moveY;
+        console.log("distance", distance);
       },
-      onPanResponderRelease: () => {
-        console.log("onPanResponderRelease");
-      },
+      onPanResponderRelease: () => {},
     })
   );
 
