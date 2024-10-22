@@ -21,9 +21,18 @@ export default function App() {
       onPanResponderMove: (e, gestureState) => {
         const { moveY, y0 } = gestureState;
         const distance = y0 - moveY;
-        console.log("distance", distance);
+        // distance가 0보다 작으면 topHeight를 늘리고, 0보다 크면 bottomHeight를 늘림
+        if (distance < 0) {
+          setTopHeight(DEFAULT_HEIGHT - distance);
+        } else if (distance > 0) {
+          setBottomHeight(DEFAULT_HEIGHT + distance);
+        }
       },
-      onPanResponderRelease: () => {},
+      onPanResponderRelease: () => {
+        // 손가락을 뗐을 때 초기화
+        setTopHeight(DEFAULT_HEIGHT);
+        setBottomHeight(DEFAULT_HEIGHT);
+      },
     })
   );
 
