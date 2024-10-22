@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import {
   PanResponder,
   StyleSheet,
+  Text,
   useWindowDimensions,
   View,
 } from "react-native";
@@ -17,15 +18,26 @@ export default function App() {
   const panResponderRef = useRef(
     PanResponder.create({
       onMoveShouldSetPanResponder: () => true,
-      onPanResponderGrant: (e, gestureState) => {},
       onPanResponderMove: (e, gestureState) => {
         const { moveY, y0 } = gestureState;
         const distance = y0 - moveY;
         // distance가 0보다 작으면 topHeight를 늘리고, 0보다 크면 bottomHeight를 늘림
         if (distance < 0) {
-          setTopHeight(DEFAULT_HEIGHT - distance);
+          const newHeight = DEFAULT_HEIGHT - distance;
+          const maxHeight = height - DEFAULT_HEIGHT;
+          if (newHeight > maxHeight) {
+            setTopHeight(maxHeight);
+            return;
+          }
+          setTopHeight(newHeight);
         } else if (distance > 0) {
-          setBottomHeight(DEFAULT_HEIGHT + distance);
+          const newHeight = DEFAULT_HEIGHT + distance;
+          const maxHeight = height - DEFAULT_HEIGHT;
+          if (newHeight > maxHeight) {
+            setBottomHeight(maxHeight);
+            return;
+          }
+          setBottomHeight(newHeight);
         }
       },
       onPanResponderRelease: () => {
@@ -48,8 +60,19 @@ export default function App() {
         style={{
           flex: 1,
           backgroundColor: "green",
+          alignItems: "center",
+          justifyContent: "center",
         }}
-      />
+      >
+        <Text
+          style={{
+            color: "white",
+            fontSize: 30,
+          }}
+        >
+          Center
+        </Text>
+      </View>
       <View
         style={{
           height: bottomHeight,
